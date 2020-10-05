@@ -27,6 +27,17 @@ namespace Flags
             services.AddControllersWithViews();
             services.AddSingleton<ICosmosDBService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb"), "/id").GetAwaiter().GetResult());
             //services.AddSingleton<ICosmosDBService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CountriesDB"), "/abreviation").GetAwaiter().GetResult());
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllHeaders",
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin()
+                                 .AllowAnyHeader()
+                                 .AllowAnyMethod();
+                      });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +59,8 @@ namespace Flags
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("AllowAllHeaders");
 
             app.UseEndpoints(endpoints =>
             {
