@@ -124,34 +124,5 @@ namespace Flags.Controllers
 
             return View(item);
         }
-
-        /*
-        [HttpPost]
-        [ActionName("Play")]
-        public Task<ActionResult> PLey([Bind("Abreviation")] string abr)
-        {
-            abr = "dk";
-            var databaseUri = "https://toukerdb.documents.azure.com:443/";
-            var primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
-            var databaseName = "flagdatabase";
-            var containerName = "Countries";
-
-
-            DocumentClient client = new DocumentClient(new Uri(databaseUri), primaryKey);
-
-            Country country = client.CreateDocumentQuery<Country>(
-                UriFactory.CreateDocumentCollectionUri(databaseName, containerName))
-                .Where(c => c.Abreviation == abr).AsEnumerable().First();
-
-            return RedirectToAction("Play");
-        }
-
-        public async Task<ActionResult> getNames2()
-        {
-            string query = "SELECT * FROM c WHERE c.abreviation = 'dk'";
-            string abr = "se";
-            Quiz item = await _cosmosDBService.GetItemAsync(query);
-            return Json(item);
-        }*/
     }
 }
