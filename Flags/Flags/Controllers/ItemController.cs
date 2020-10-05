@@ -122,17 +122,13 @@ namespace Flags.Controllers
             if (item == null)
                 return NotFound();
 
-
             return View(item);
         }
 
-        public void Test()
-        {
-            Console.WriteLine("Testtest");
-        }
-
+        /*
         [HttpPost]
-        public ActionResult getNames(string abr)
+        [ActionName("Play")]
+        public Task<ActionResult> PLey([Bind("Abreviation")] string abr)
         {
             abr = "dk";
             var databaseUri = "https://toukerdb.documents.azure.com:443/";
@@ -147,14 +143,15 @@ namespace Flags.Controllers
                 UriFactory.CreateDocumentCollectionUri(databaseName, containerName))
                 .Where(c => c.Abreviation == abr).AsEnumerable().First();
 
-            return View(Json(country.Names));
+            return RedirectToAction("Play");
         }
 
-        [HttpPost]
-        public ActionResult getNames2()
+        public async Task<ActionResult> getNames2()
         {
+            string query = "SELECT * FROM c WHERE c.abreviation = 'dk'";
             string abr = "se";
-            Quiz item = _cosmosDBService.GetItemAsync('SELECT c.names FROM c WHERE c.abreviation = "dk"');
-        }
+            Quiz item = await _cosmosDBService.GetItemAsync(query);
+            return Json(item);
+        }*/
     }
 }

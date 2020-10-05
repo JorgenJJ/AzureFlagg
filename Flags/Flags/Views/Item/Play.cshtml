@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var order = Model.getRandomOrder();
     int counter = 0;
+    var masterKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
 
 }
 
@@ -38,9 +39,13 @@
 
     function checkAnswer(a) {
         $.ajax({
-            type: "POST",
-            url: "Test",
+            type: "GET",
+            url: "https://toukerdb.documents.azure.com:443/dbs/flagdatabase/colls/Countries/",
             dataType: "json",
+            headers: {
+                "Content-Type": "application/query+json",
+                "Authorization": "@Model.GenerateAuthToken("GET", "colls", "dbs/flagdatabse/colls/Countries", DateTime.UtcNow.ToShortDateString(), masterKey, "master", "1.0")"
+            },
             success: function (data) {
                 alert("it works");
             }
@@ -56,9 +61,8 @@
 
     function nextFlag() {
         $.ajax({
-            type: "POST",
-            url: "@Url.Action("getNames")",
-            data: "no",
+            url: '@Url.Action("GetNames", "Item")',
+            data: { data: "se" },
             dataType: "json",
             success: function (data) {
                 alert("it works: " + data);
