@@ -1,8 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Flags.Models;
 using Flags.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 
 namespace Flags.Controllers
 {
@@ -114,7 +122,39 @@ namespace Flags.Controllers
             if (item == null)
                 return NotFound();
 
+
             return View(item);
+        }
+
+        public void Test()
+        {
+            Console.WriteLine("Testtest");
+        }
+
+        [HttpPost]
+        public ActionResult getNames(string abr)
+        {
+            abr = "dk";
+            var databaseUri = "https://toukerdb.documents.azure.com:443/";
+            var primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
+            var databaseName = "flagdatabase";
+            var containerName = "Countries";
+
+
+            DocumentClient client = new DocumentClient(new Uri(databaseUri), primaryKey);
+
+            Country country = client.CreateDocumentQuery<Country>(
+                UriFactory.CreateDocumentCollectionUri(databaseName, containerName))
+                .Where(c => c.Abreviation == abr).AsEnumerable().First();
+
+            return View(Json(country.Names));
+        }
+
+        [HttpPost]
+        public ActionResult getNames2()
+        {
+            string abr = "se";
+            Quiz item = _cosmosDBService.GetItemAsync('SELECT c.names FROM c WHERE c.abreviation = "dk"');
         }
     }
 }

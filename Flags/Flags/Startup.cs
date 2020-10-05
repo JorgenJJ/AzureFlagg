@@ -26,6 +26,7 @@ namespace Flags
         {
             services.AddControllersWithViews();
             services.AddSingleton<ICosmosDBService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
+            services.AddSingleton<ICosmosDBService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CountriesDB")).GetAwaiter().GetResult());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

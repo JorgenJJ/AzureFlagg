@@ -26,6 +26,8 @@
 
     @foreach (var item in Model)
     {
+        var count = 0;
+        if (item.Countries != null) count = item.Countries.Count();
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -37,14 +39,7 @@
                 @Html.DisplayFor(modelItem => item.Completed)
             </td>
             <td>
-                @if (item.Countries != null)
-                {
-                    @foreach (var country in item.Countries)
-                    {
-                        @Html.DisplayFor(modelItem => country)
-                        <br />
-                    }
-                }
+                @Html.DisplayFor(modelItem => count)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
