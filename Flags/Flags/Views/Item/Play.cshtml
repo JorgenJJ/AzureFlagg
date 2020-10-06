@@ -48,6 +48,7 @@
     var fullNamesJS = JSON.parse('@Html.Raw(Json.Serialize(fullNames))');
     var currentFlag = 0;
     var lives = 3;
+    var corrects = 0;
 
     document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag] + ".svg";
 
@@ -69,6 +70,7 @@
             }
         }
         if (cor) {
+            corrects++;
             document.getElementById("inp_answer").style.backgroundColor = "lightgreen";
             setTimeout(function () {
                 document.getElementById("inp_answer").style.backgroundColor = "#e9ecef";
@@ -108,9 +110,15 @@
         $.ajax({
             type: "POST",
             url: '/Item/Results/@(Model.Id)',
-            data: { "data": "testdata" },
-            contentType: "application/json: charset=utf-8",
-            dataType: "json",
+            data: {
+                "Id": "@(Model.Id)",
+                "Name": "@(Model.Name)",
+                "Attempts": @(Model.Attempts),
+                "Completed": @(Model.Completed),
+                "Average": @(Model.Average),
+                "Countries": JSON.parse('@Html.Raw(Json.Serialize(Model.Countries))'),
+                "CorrectAnswers": corrects,
+            },
             success: function () {
                 console.log("Redirect successfull");
             },
