@@ -25,7 +25,7 @@ namespace Flags.Models
         public int Completed { get; set; }
 
         [JsonProperty(PropertyName = "average")]
-        public int Average { get; set; }
+        public float Average { get; set; }
 
         [JsonProperty(PropertyName = "countries")]
         public string[] Countries { get; set; }

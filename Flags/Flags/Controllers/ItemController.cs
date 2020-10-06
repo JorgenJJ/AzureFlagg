@@ -124,5 +124,35 @@ namespace Flags.Controllers
 
             return View(item);
         }
+
+        [ActionName("Results")]
+        public async Task<ActionResult> ShowResults(string id)
+        {
+            Console.WriteLine("GET {0}", id);
+            if (id == null)
+                return BadRequest();
+
+            Quiz item = await _cosmosDBService.GetItemAsync(id);
+            if (item == null)
+                return NotFound();
+
+            return View(item);
+        }
+
+        [HttpPost]
+        [ActionName("Results")]
+        public async Task<ActionResult> PostResults(string id)
+        {
+            var context = HttpContext;
+            Console.WriteLine("POST {0} and {1}", id, context.Request);
+            if (id == null)
+                return BadRequest();
+
+            Quiz item = await _cosmosDBService.GetItemAsync(id);
+            if (item == null)
+                return NotFound();
+
+            return View(item);
+        }
     }
 }

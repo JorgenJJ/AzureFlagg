@@ -15,16 +15,29 @@
 
 <div class="h-100">
     <div>
-        <h2>@Html.DisplayFor(model => Model.Name)</h2>
+        <h2 id="txt_title">@Html.DisplayFor(model => Model.Name)</h2>
 
     </div>
-    <div>
-        <div>
-            <img src="" alt="Flag missing" id="img_flag" height="200" />
+    <div class="w-100 d-flex flex-row">
+        <div class="w-50">
+            <div>
+                <img src="" alt="Flag missing" id="img_flag" height="200" />
+            </div>
+            <div class="d-flex flex-row" style="width: inherit">
+                <input type="text" name="inp_answer" placeholder="Which country..." id="inp_answer" class="input-group-text" />
+                <input type="button" name="btn_answer" value="OK" id="btn_answer" class="btn btn-light mt-1" />
+            </div>
+            <div class="mt-5 d-flex flex-row">
+                <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart1" class="mr-1 heart"/>
+                <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart2" class="mr-1 heart" />
+                <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart3" class="mr-1 heart" />
+            </div>
         </div>
-        <div class="d-flex flex-row">
-            <input type="text" name="inp_answer" placeholder="Which country..." id="inp_answer" class="input-group-text" />
-            <input type="button" name="btn_answer" value="OK" id="btn_answer" class="btn btn-light" />
+        <div class="w-25">
+            <p class="h6">Game rules</p>
+            <p>You can skip the current flag by clicking OK (Enter) while the text field is blank.</p>
+            <p>You have three lives, which are spent when you guess the wrong country.</p>
+            <p>When you run out of lives, you no longer have multiple attempts at a single flag.</p>
         </div>
     </div>
 </div>
@@ -34,6 +47,7 @@
     var orderJS = JSON.parse('@Html.Raw(Json.Serialize(order))');
     var fullNamesJS = JSON.parse('@Html.Raw(Json.Serialize(fullNames))');
     var currentFlag = 0;
+    var lives = 3;
 
     document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag] + ".svg";
 
@@ -48,20 +62,67 @@
     }
 
     function checkAnswer(a) {
+        var cor = false;
         for (var i = 1; i < fullNamesJS[currentFlag].length; i++) {
             if (document.getElementById("inp_answer").value == fullNamesJS[currentFlag][i]) {
-                console.log("correct");
+                cor = true;
+            }
+        }
+        if (cor) {
+            document.getElementById("inp_answer").style.backgroundColor = "lightgreen";
+            setTimeout(function () {
+                document.getElementById("inp_answer").style.backgroundColor = "#e9ecef";
+                nextFlag();
+            }, 500);
+        }
+        else {
+            document.getElementById("inp_answer").style.backgroundColor = "#ffcccb";
+            setTimeout(function () {
+                document.getElementById("inp_answer").style.backgroundColor = "#e9ecef";
+            }, 500);
+            if (lives == 0) {
                 nextFlag();
             }
-            else console.log("incorrect");
+            else {
+                document.getElementById("heart" + lives).src = "/images/favorite_border-black-18dp.svg";
+                lives--;
+            }
         }
     }
 
     function nextFlag() {
-        if (currentFlag + 1 == orderJS.length) return null;
-        currentFlag++;
-        document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag] + ".svg";
-        document.getElementById("inp_answer").value = "";
+        if (currentFlag + 1 == orderJS.length) {
+            finishQuiz();
+        }
+        else {
+            currentFlag++;
+            document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag] + ".svg";
+            document.getElementById("inp_answer").value = "";
+        }
+    }
+
+    function finishQuiz() {
+        //$.post('/Item/Results/@(Model.Id)', function (result) {
+        //    window.location.href = "/Item/Results/@Model.Id";
+        //});
+        $.ajax({
+            type: "POST",
+            url: '/Item/Results/@(Model.Id)',
+            data: { "data": "testdata" },
+            contentType: "application/json: charset=utf-8",
+            dataType: "json",
+            success: function () {
+                console.log("Redirect successfull");
+            },
+            complete: function () {
+                window.location.href = "/Item/Results/@(Model.Id)";
+                console.log("Completed");
+            },
+            failure: function () {
+                console.log("Could not redirect to results page");
+            }
+        })
+        document.getElementById("txt_title").innerHTML = "Result for @Html.DisplayFor(model => Model.Name): 3/3";
     }
 
     document.addEventListener("keypress", function (e) {
