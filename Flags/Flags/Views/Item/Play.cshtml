@@ -115,7 +115,7 @@
                 "Name": "@(Model.Name)",
                 "Attempts": @(Model.Attempts),
                 "Completed": @(Model.Completed),
-                "Average": @(Model.Average),
+                "Average": '@(Model.Average)',
                 "Countries": JSON.parse('@Html.Raw(Json.Serialize(Model.Countries))'),
                 "CorrectAnswers": corrects,
             },
@@ -129,8 +129,7 @@
             failure: function () {
                 console.log("Could not redirect to results page");
             }
-        })
-        document.getElementById("txt_title").innerHTML = "Result for @Html.DisplayFor(model => Model.Name): 3/3";
+        });
     }
 
     document.addEventListener("keypress", function (e) {
