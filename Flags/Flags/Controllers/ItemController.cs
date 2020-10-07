@@ -44,6 +44,15 @@ namespace Flags.Controllers
             {
                 item.Id = Guid.NewGuid().ToString();
 
+                if (item.Name != null)
+                {
+                    if (item.Name == "")
+                    {
+                        item.Name = "Flag quiz";
+                    }
+                }
+                else item.Name = "Flag quiz";
+
                 Regex reg = new Regex("[\"]");
                 string trimmed = reg.Replace(item.Countries[0], "");
                 trimmed = trimmed.Trim(new Char[] { '[', ']' });

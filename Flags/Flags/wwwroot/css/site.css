@@ -87,3 +87,7 @@ body {
 .custom-border {
     border: thin solid white;
 }
+
+.flag-border {
+    border: thin solid black;
+}

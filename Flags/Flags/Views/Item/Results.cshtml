@@ -5,6 +5,12 @@
 
 <p class="h2">Results for @Model.Name</p>
 
+<div class="h6 mt-5 d-flex flex-row">
+    <p id="txt_correct"></p>
+    <p>/</p>
+    <p>@Model.Countries.Length countries guessed</p>
+</div>
+
 <p>
     @Html.ActionLink("Return to front page", "Index")
 </p>
@@ -13,4 +19,5 @@
     const params = new URLSearchParams(document.location.search);
     const corrects = params.get("correct");
 
+    document.getElementById("txt_correct").innerHTML = corrects
 </script>
