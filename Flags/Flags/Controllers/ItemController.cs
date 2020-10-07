@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Flags.Models;
@@ -42,6 +43,14 @@ namespace Flags.Controllers
             if (ModelState.IsValid)
             {
                 item.Id = Guid.NewGuid().ToString();
+
+                Regex reg = new Regex("[\"]");
+                string trimmed = reg.Replace(item.Countries[0], "");
+                trimmed = trimmed.Trim(new Char[] { '[', ']' });
+                string[] splitted = trimmed.Split(",");
+                item.Countries = splitted;
+                
+
                 await _cosmosDBService.AddItemAsync(item);
                 return RedirectToAction("Index");
             }

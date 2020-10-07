@@ -3,9 +3,12 @@
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var quiz = new Quiz();
+    var countries = quiz.GetAllCountries();
+    var counter = 0;
 }
 
-<h2>Create a new To-Do Item</h2>
+<h2>Create a new quiz</h2>
 
 
 @using (Html.BeginForm())
@@ -23,28 +26,13 @@
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Average, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Average, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Average, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Completed, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Completed, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Completed, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Attempts, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Attempts, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Attempts, "", new { @class = "text-danger" })
-        </div>
+    <div class="country-list w-25 ml-4">
+        @Html.HiddenFor(model => model.Countries) 
+        @foreach (var country in countries)
+        {
+            <div class="w-100 d-flex align-content-center m-1 custom-border" id="div_country_@country.Abreviation" onclick="selectCountry('@country.Abreviation')" name="true">@country.Names[1]</div>
+            counter++;
+        }
     </div>
 
     <div class="form-group">
@@ -59,3 +47,31 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 <script src="~/bundles/jqueryval"></script>
+
+<script>
+    var countries = [];
+
+    function selectCountry(id) {
+        var div = document.getElementById("div_country_" + id);
+        var divName = div.getAttribute("name");
+        if (divName == "true") {
+            div.setAttribute("name", "false");
+
+            div.style.backgroundColor = "#90ee90";
+            div.style.border = "thin solid #82d882";
+
+            countries.push(id);
+        }
+        else {
+            div.setAttribute("name", "true");
+
+            div.style.backgroundColor = "white";
+            div.style.border = "thin solid white";
+
+            var index = countries.indexOf(id);
+            countries.splice(index, 1);
+        }
+
+        document.getElementById("Countries").value = countries;
+    }
+</script>

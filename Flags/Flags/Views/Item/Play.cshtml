@@ -1,9 +1,8 @@
 ﻿@model Flags.Models.Quiz
 @{
+    ViewBag.Title = "Quiz - " + Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var order = Model.getRandomOrder();
-    int counter = 0;
-    Model.getFullName("no");
+    var order = Model.GetRandomOrder();
 
     List<string[]> fullNames = new List<string[]>();
 
@@ -123,7 +122,7 @@
                 console.log("Redirect successfull");
             },
             complete: function () {
-                window.location.href = "/Item/Results/@(Model.Id)";
+                window.location.href = "/Item/Results/@(Model.Id)?correct=" + corrects;
                 console.log("Completed");
             },
             failure: function () {

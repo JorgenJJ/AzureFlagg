@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.IO;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Flags.Models
 {
@@ -49,7 +50,7 @@ namespace Flags.Models
             return country.Names;
         }
 
-        public string[] getRandomOrder() {
+        public string[] GetRandomOrder() {
             Random rng = new Random();
 
             string[] shuffledList = Countries;
@@ -64,6 +65,24 @@ namespace Flags.Models
             }
 
             return shuffledList;
+        }
+
+        public List<Country> GetAllCountries()
+        {
+            var databaseUri = "https://toukerdb.documents.azure.com:443/";
+            string primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
+            var databaseName = "flagdatabase";
+            var containerName = "Countries";
+
+            DocumentClient client = new DocumentClient(new Uri(databaseUri), primaryKey);
+            FeedOptions DefaultOptions = new FeedOptions { EnableCrossPartitionQuery = true };
+
+            var countries = client.CreateDocumentQuery<Country>(
+                UriFactory.CreateDocumentCollectionUri(databaseName, containerName), 
+                "SELECT * FROM Countries c ORDER BY c.abreviation", DefaultOptions)
+                .AsEnumerable().ToList();
+
+            return countries;
         }
     }
 }
