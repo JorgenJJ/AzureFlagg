@@ -7,11 +7,24 @@ using System.IO;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using System.Reflection.Metadata.Ecma335;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
+using Azure.Core;
 
 namespace Flags.Models
 {
     public class Quiz
     {
+        public static SecretClientOptions options = new SecretClientOptions()
+        {
+            Retry = {
+                Delay = TimeSpan.FromSeconds(2),
+                MaxDelay = TimeSpan.FromSeconds(16),
+                MaxRetries = 5,
+                Mode = RetryMode.Exponential
+            }
+        };
+        public SecretClient keyClient = new SecretClient(new Uri("https://toukerkeyvault.vault.azure.net/"), new DefaultAzureCredential(), options);
 
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
@@ -31,12 +44,11 @@ namespace Flags.Models
         [JsonProperty(PropertyName = "countries")]
         public string[] Countries { get; set; }
 
-        private int counter = 0;
-        public int Counter { get { return counter; } set { counter += value; } }
-
         public string[] getFullName(string abr) {
+            KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
+
             var databaseUri = "https://toukerdb.documents.azure.com:443/";
-            var primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
+            var primaryKey = secret.Value;
             var databaseName = "flagdatabase";
             var containerName = "Countries";
 
@@ -69,8 +81,10 @@ namespace Flags.Models
 
         public List<Country> GetAllCountries()
         {
+            KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
+
             var databaseUri = "https://toukerdb.documents.azure.com:443/";
-            string primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
+            string primaryKey = secret.Value;
             var databaseName = "flagdatabase";
             var containerName = "Countries";
 
