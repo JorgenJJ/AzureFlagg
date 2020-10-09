@@ -45,10 +45,10 @@ namespace Flags.Models
         public string[] Countries { get; set; }
 
         public string[] getFullName(string abr) {
-            KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
+            //KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
 
             var databaseUri = "https://toukerdb.documents.azure.com:443/";
-            var primaryKey = secret.Value;
+            var primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
             var databaseName = "flagdatabase";
             var containerName = "Countries";
 
@@ -81,10 +81,10 @@ namespace Flags.Models
 
         public List<Country> GetAllCountries()
         {
-            KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
+            //KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
 
             var databaseUri = "https://toukerdb.documents.azure.com:443/";
-            string primaryKey = secret.Value;
+            string primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
             var databaseName = "flagdatabase";
             var containerName = "Countries";
 
