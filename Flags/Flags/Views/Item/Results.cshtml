@@ -1,23 +1,97 @@
 ﻿@model Flags.Models.Quiz
 @{
-    
+
 }
 
-<p class="h2">Results for @Model.Name</p>
-
-<div class="h6 mt-5 d-flex flex-row">
-    <p id="txt_correct"></p>
-    <p>/</p>
-    <p>@Model.Countries.Length countries guessed</p>
+<div>
+    <div>
+        <p class="h2">Results for @Model.Name</p>
+    </div>
+    <div class="w-100 d-flex flex-row" style="height: 300px">
+        <div class="h-100 w-25">
+            <canvas id="pie_canvas"></canvas>
+        </div>
+        <div class="h-100 w-25">
+            <canvas id="bar_canvas"></canvas>
+        </div>
+    </div>
+    <div>
+        <p>
+            @Html.ActionLink("Return to front page", "Index")
+        </p>
+    </div>
 </div>
 
-<p>
-    @Html.ActionLink("Return to front page", "Index")
-</p>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
     const params = new URLSearchParams(document.location.search);
     const corrects = params.get("correct");
+    const wrongs = @Model.Countries.Length - corrects
 
-    document.getElementById("txt_correct").innerHTML = corrects
+    createRightWrongChart();
+    createAverageChart();
+
+    function createRightWrongChart() {
+        var ctx = document.getElementById("pie_canvas").getContext("2d");
+        var pieChart = new Chart(ctx, {
+            type: "pie",
+            data: {
+                datasets: [{
+                    data: [corrects, wrongs],
+                    backgroundColor: [
+                        "#90ee90",
+                        "#ff4545"
+                    ]
+                }],
+                labels: [
+                    "Correct",
+                    "Wrong"
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    function createAverageChart() {
+        var ctx = document.getElementById("bar_canvas").getContext("2d");
+        var pieChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                datasets: [{
+                    label: "Averages",
+                    data: [(corrects / @Model.Countries.Length * 100), @Model.Average],
+                    backgroundColor: [
+                        "#5276e3",
+                        "#ffe145"
+                    ]
+                }],
+                labels: [
+                    "Your average",
+                    "World average"
+                ]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: "Average"
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            max: 100,
+                            min: 0,
+                            stepSize: 10
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
 </script>
