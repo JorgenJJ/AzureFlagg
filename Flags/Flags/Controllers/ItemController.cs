@@ -143,6 +143,30 @@ namespace Flags.Controllers
             return View(item);
         }
 
+        [HttpPost]
+        [ActionName("Play")]
+        public async Task<ActionResult> GetNextCountry([Bind("Abreviation")] string Abreviation)
+        {
+            Console.WriteLine("Function called");
+
+            var databaseUri = "https://toukerdb.documents.azure.com:443/";
+            var primaryKey = "QR9M7wX2mZyCh0eCMZc8WcI3Mug0bkDVwS9Fi2lxMfmHJ6745aaUHS6O6WepgV01hUKBT471845jdglwDuLg5A==";
+            var databaseName = "flagdatabase";
+            var containerName = "Countries";
+
+
+            DocumentClient client = new DocumentClient(new Uri(databaseUri), primaryKey);
+
+            Country country = client.CreateDocumentQuery<Country>(
+                UriFactory.CreateDocumentCollectionUri(databaseName, containerName))
+                .Where(c => c.Abreviation == Abreviation).AsEnumerable().First();
+
+            return View(country);
+
+            //string query = "SELECT * FROM c WHERE c.abreviation == " + abr;
+            //return View(await _cosmosDBService.GetItemAsync(query));
+        }
+
         [ActionName("Results")]
         public async Task<ActionResult> ShowResults(string id)
         {
@@ -175,7 +199,7 @@ namespace Flags.Controllers
             Console.WriteLine(shortened);
 
             item.Attempts++;
-            item.Average = item.Average + ((newAverage - item.Average) / item.Attempts);
+            item.Average += ((newAverage - item.Average) / item.Attempts);
             if (correctAnswers == quizLength) item.Completed++;
 
             await _cosmosDBService.UpdateItemAsync(item.Id, item);

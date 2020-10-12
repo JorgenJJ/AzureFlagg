@@ -8,7 +8,7 @@
 
     for (int i = 0; i < order.Count(); i++)
     {
-        fullNames.Add(Model.getFullName(order[i]));
+        fullNames.Add(Model.GetFullName(order[i]));
     }
 }
 
@@ -27,7 +27,7 @@
                 <input type="button" name="btn_answer" value="OK" id="btn_answer" class="btn btn-light mt-1" />
             </div>
             <div class="mt-5 d-flex flex-row">
-                <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart1" class="mr-1 heart"/>
+                <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart1" class="mr-1 heart" />
                 <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart2" class="mr-1 heart" />
                 <img src="~/images/favorite-black-18dp.svg" alt="Full heart" id="heart3" class="mr-1 heart" />
             </div>
@@ -38,6 +38,8 @@
             <p>You have three lives, which are spent when you guess the wrong country.</p>
             <p>When you run out of lives, you no longer have multiple attempts at a single flag.</p>
         </div>
+
+        <!--<button onclick="queryTest()">Query test</button>-->
     </div>
 </div>
 
@@ -123,6 +125,27 @@
             },
             complete: function () {
                 window.location.href = "/Item/Results/@(Model.Id)?correct=" + corrects;
+                console.log("Completed");
+            },
+            failure: function () {
+                console.log("Could not redirect to results page");
+            }
+        });
+    }
+
+    function queryTest() {
+        console.log("Query test start");
+
+        $.ajax({
+            type: "POST",
+            url: '/Item/Play',
+            data: {
+                "Abreviation": fullNamesJS[currentFlag][0]
+            },
+            success: function () {
+                console.log("Redirect successfull");
+            },
+            complete: function () {
                 console.log("Completed");
             },
             failure: function () {

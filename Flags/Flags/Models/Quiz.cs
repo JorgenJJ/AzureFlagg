@@ -44,7 +44,7 @@ namespace Flags.Models
         [JsonProperty(PropertyName = "countries")]
         public string[] Countries { get; set; }
 
-        public string[] getFullName(string abr) {
+        public string[] GetFullName(string abr) {
             //KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
 
             var databaseUri = "https://toukerdb.documents.azure.com:443/";
