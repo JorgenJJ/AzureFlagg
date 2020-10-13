@@ -3,13 +3,6 @@
     ViewBag.Title = "Quiz - " + Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var order = Model.GetRandomOrder();
-
-    List<string[]> fullNames = new List<string[]>();
-
-    for (int i = 0; i < order.Count(); i++)
-    {
-        fullNames.Add(Model.GetFullName(order[i]));
-    }
 }
 
 <div class="h-100">
@@ -46,12 +39,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
 <script>
     var orderJS = JSON.parse('@Html.Raw(Json.Serialize(order))');
-    var fullNamesJS = JSON.parse('@Html.Raw(Json.Serialize(fullNames))');
     var currentFlag = 0;
     var lives = 3;
     var corrects = 0;
 
-    document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag] + ".svg";
+    document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag][0] + ".svg";
 
     function validateInput() {
         var answer = document.getElementById("inp_answer").value;
@@ -65,8 +57,8 @@
 
     function checkAnswer(a) {
         var cor = false;
-        for (var i = 1; i < fullNamesJS[currentFlag].length; i++) {
-            if (document.getElementById("inp_answer").value == fullNamesJS[currentFlag][i]) {
+        for (var i = 1; i < orderJS[currentFlag].length; i++) {
+            if (document.getElementById("inp_answer").value == orderJS[currentFlag][i]) {
                 cor = true;
             }
         }
@@ -99,7 +91,7 @@
         }
         else {
             currentFlag++;
-            document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag] + ".svg";
+            document.getElementById("img_flag").src = "https://toukerstorageaccount.blob.core.windows.net/flags/" + orderJS[currentFlag][0] + ".svg";
             document.getElementById("inp_answer").value = "";
         }
     }
@@ -140,7 +132,7 @@
             type: "POST",
             url: '/Item/Play',
             data: {
-                "Abreviation": fullNamesJS[currentFlag][0]
+                "Abreviation": orderJS[currentFlag][0]
             },
             success: function () {
                 console.log("Redirect successfull");

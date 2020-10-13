@@ -184,7 +184,7 @@ namespace Flags.Controllers
 
         [HttpPost]
         [ActionName("Results")]
-        public async Task<ActionResult> PostResults([Bind("Id,Name,Attempts,Completed,Average,Countries")] Quiz item, [Bind("CorrectAnswers")] int correctAnswers)
+        public async Task<ActionResult> PostResults([Bind("Id,Name,Attempts,Completed,Average,Countries,CountriesV2")] Quiz item, [Bind("CorrectAnswers")] int correctAnswers)
         {
             Console.WriteLine("POST {0} and {1} and {2}", item.Id, item.Average, correctAnswers);
 
@@ -202,6 +202,8 @@ namespace Flags.Controllers
             item.Attempts++;
             item.Average += ((newAverage - item.Average) / item.Attempts);
             if (correctAnswers == quizLength) item.Completed++;
+
+            item.CountriesV2 = item.GetFullNames(item.Countries);
 
             await _cosmosDBService.UpdateItemAsync(item.Id, item);
 

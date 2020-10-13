@@ -82,16 +82,16 @@ namespace Flags.Models
             return result;
         }
 
-        public string[] GetRandomOrder() {
+        public List<string[]> GetRandomOrder() {
             Random rng = new Random();
 
-            string[] shuffledList = Countries;
+            List<string[]> shuffledList = CountriesV2;
 
-            int n = Countries.Count();
+            int n = CountriesV2.Count();
             while (n > 1) {
                 n--;
                 int k = rng.Next(n + 1);
-                string temp = shuffledList[k];
+                string[] temp = shuffledList[k];
                 shuffledList[k] = shuffledList[n];
                 shuffledList[n] = temp;
             }
