@@ -38,7 +38,7 @@ namespace Flags.Controllers
         [HttpPost]
         [ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([Bind("Id,Name,Attempts,Completed,Average,Countries")] Quiz item)
+        public async Task<ActionResult> CreateAsync([Bind("Id,Name,Attempts,Completed,Average,Countries,CountriesV2")] Quiz item)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +58,8 @@ namespace Flags.Controllers
                 trimmed = trimmed.Trim(new Char[] { '[', ']' });
                 string[] splitted = trimmed.Split(",");
                 item.Countries = splitted;
-                
+
+                item.CountriesV2 = item.GetFullNames(item.Countries);                
 
                 await _cosmosDBService.AddItemAsync(item);
                 return RedirectToAction("Index");

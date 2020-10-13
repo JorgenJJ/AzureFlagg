@@ -44,6 +44,9 @@ namespace Flags.Models
         [JsonProperty(PropertyName = "countries")]
         public string[] Countries { get; set; }
 
+        [JsonProperty(PropertyName = "countriesv2")]
+        public List<string[]> CountriesV2 { get; set; }
+
         public string[] GetFullName(string abr) {
             //KeyVaultSecret secret = keyClient.GetSecret("CosmosPrimaryKey");
 
@@ -60,6 +63,23 @@ namespace Flags.Models
                 .Where(c => c.Abreviation == abr).AsEnumerable().First();
 
             return country.Names;
+        }
+
+        public List<string[]> GetFullNames(string[] abrs)
+        {
+            List<Country> countries = GetAllCountries();
+            List<string[]> result = new List<string[]>();
+
+            foreach (Country country in countries)
+            {
+                int pos = Array.IndexOf(abrs, country.Abreviation);
+                if (pos > -1)
+                {
+                    result.Add(country.Names);
+                }
+            }
+
+            return result;
         }
 
         public string[] GetRandomOrder() {
